@@ -1,3 +1,5 @@
+using Cars.DataBase;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddNpgsql<DatabaseContext>(
     connectionString: "Host=localhost;Port=5432;Username=postgres;Password=root;Database=cars-db");
-builder.Services.AddScoped<>();
+//builder.Services.AddScoped<>();
 
 var app = builder.Build();
 
