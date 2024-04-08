@@ -1,4 +1,6 @@
 ﻿using Cars.Entities;
+using Cars.Models;
+using Cars.Parameteres;
 using Cars.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,20 +11,19 @@ namespace Cars.Controllers;
 public class CarsControllers : ControllerBase
 { 
     private readonly CarService _carService;
-
     public CarsControllers(CarService carService)
     {
         _carService = carService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Car>>> GetAll()
+    public async Task<ActionResult<List<CarModel>>> GetAll()
     {
         return await _carService.GetAll();
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Car>> Get(int id)
+    public async Task<ActionResult<CarModel>> Get(int id)
     {
         var car = await _carService.Get(id);
         if (car == null)
@@ -32,23 +33,17 @@ public class CarsControllers : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Car car)
+    public async Task<IActionResult> Create(CarCreateParameters createParameters)
     {
-        await _carService.Add(car);
-        return CreatedAtAction(nameof(Get), new { id = car.Id }, car);
+        await _carService.Add(createParameters);
+        
+        return NoContent();
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Car car)
+    public async Task<IActionResult> Update(int id, CarUpdateParameters updateParameters)
     {
-        if (id != car.Id)
-            return BadRequest();
-
-        var existingCar = await _carService.Get(id);
-        if (existingCar is null)
-            return NotFound();
-
-        await _carService.Update(car);
+        await _carService.Update(id, updateParameters);
 
         return NoContent();
     }
