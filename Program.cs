@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddNpgsql<DatabaseContext>(
-    connectionString: "Host=localhost;Port=5432;Username=postgres;Password=root;Database=cars-db");
+    connectionString: "Host=localhost;Port=5433;Username=postgres;Password=root;Database=cars-db");
 //builder.Services.AddScoped<>();
 
 var app = builder.Build();
