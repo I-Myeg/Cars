@@ -64,43 +64,45 @@ namespace Cars.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EngineId");
+
+                    b.HasIndex("ManafacturerId");
+
                     b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("Cars.Entities.Color", b =>
                 {
-                    b.Property<int>("ColorId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ColorId"));
-
-                    b.Property<int>("ColorCode")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ColorUnit")
+                    b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("ColorId");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Colors");
                 });
 
             modelBuilder.Entity("Cars.Entities.Country", b =>
                 {
-                    b.Property<int>("CountryId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CountryId"));
-
-                    b.Property<int>("CountryCode")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("CountyUnit")
+                    b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("CountryId");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Countries");
                 });
@@ -113,8 +115,8 @@ namespace Cars.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EngineId"));
 
-                    b.Property<int>("EngineCapacity")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("EngineCapacity")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("EngineConfiguration")
                         .HasColumnType("text");
@@ -159,6 +161,35 @@ namespace Cars.Migrations
                     b.HasKey("ManafacturerId");
 
                     b.ToTable("Manafacturers");
+                });
+
+            modelBuilder.Entity("Cars.Entities.Car", b =>
+                {
+                    b.HasOne("Cars.Entities.Engine", "Engine")
+                        .WithMany("Cars")
+                        .HasForeignKey("EngineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cars.Entities.Manafacturer", "Manafacturer")
+                        .WithMany("Cars")
+                        .HasForeignKey("ManafacturerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Engine");
+
+                    b.Navigation("Manafacturer");
+                });
+
+            modelBuilder.Entity("Cars.Entities.Engine", b =>
+                {
+                    b.Navigation("Cars");
+                });
+
+            modelBuilder.Entity("Cars.Entities.Manafacturer", b =>
+                {
+                    b.Navigation("Cars");
                 });
 #pragma warning restore 612, 618
         }

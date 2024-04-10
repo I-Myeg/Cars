@@ -10,6 +10,8 @@ public class CarMappingProfile : Profile
     {
         CreateMap<Car, CarModel>()
             .ForMember(cm => cm.Fabricator, opt => opt.MapFrom(p => p.Manafacturer.Fabricator));
+
+        CreateMap<Engine, EngineModel>();
+        CreateMap<Manafacturer, ManafacturerModel>();
     }
-    
 }

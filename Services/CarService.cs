@@ -23,6 +23,7 @@ public class CarService
         var cars = await _context.Cars
             .AsNoTracking()
             .Include(p => p.Manafacturer)
+            .Include(p => p.Engine)
             .ToListAsync();
 
         return _mapper.Map<List<CarModel>>(cars);
@@ -33,6 +34,7 @@ public class CarService
         var car = await _context.Cars
             .AsNoTracking()
             .Include(p => p.Manafacturer)
+            .Include(p => p.Engine)
             .SingleOrDefaultAsync(p => p.Id == id);
         
         return _mapper.Map<CarModel>(car);

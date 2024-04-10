@@ -10,5 +10,6 @@ public class CarModel
     public int Price { get; set; }
     public bool Airbags { get; set; }
     public string? Drive { get; set; }
-    public string Fabricator { get; set; }
+    public string? Fabricator { get; set; }
+    public EngineModel Engine { get; set; }
 }

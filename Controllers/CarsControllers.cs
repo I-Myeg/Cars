@@ -26,7 +26,7 @@ public class CarsControllers : ControllerBase
     public async Task<ActionResult<CarModel>> Get(int id)
     {
         var car = await _carService.Get(id);
-        if (car == null)
+        if (car is null)
             return NotFound();
 
         return car;
