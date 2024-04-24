@@ -9,9 +9,7 @@ public class CarMappingProfile : Profile
     public CarMappingProfile()
     {
         CreateMap<Car, CarModel>()
-            .ForMember(cm => cm.Fabricator, opt => opt.MapFrom(p => p.Manafacturer.Fabricator))
-            
-            .MaxDepth(1);
+            .ForMember(cm => cm.Fabricator, opt => opt.MapFrom(p => p.Manafacturer.Fabricator));
         
         CreateMap<Manafacturer, ManafacturerModel>();
     }
