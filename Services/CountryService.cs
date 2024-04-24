@@ -2,6 +2,7 @@
 using System.Text;
 using Cars.DataBase;
 using Cars.Entities;
+using Cars.Handbooks.Enums;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -66,7 +67,7 @@ public class CountryService
 
                 if (!_context.Countries.Any(c => c.Code == code))
                 {
-                    var country = new Country {Id = id, Code = code, Description = description };
+                    var country = new Country {Id = (CountryOption)id, Code = code, Description = description };
                     _context.Countries.Add(country);
                 }
             }

@@ -1,4 +1,6 @@
-﻿namespace Cars.Models;
+﻿using Cars.Entities;
+
+namespace Cars.Models;
 
 public class ManafacturerModel
 {
@@ -9,4 +11,5 @@ public class ManafacturerModel
     public int Workers { get; set; }
     public string? Branch { get; set; }
     public string? ContactInformation { get; set; }
+    public List<CarModel> Cars { get; set; }
 }

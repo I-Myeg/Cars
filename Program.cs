@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(CarMappingProfile), typeof(EngineMappingProfile));
+builder.Services.AddAutoMapper(typeof(CarMappingProfile), typeof(EngineMappingProfile), typeof(ManafacturerMappingProfile));
 
 
 builder.Services.AddNpgsql<DatabaseContext>(
@@ -23,6 +23,7 @@ builder.Services.AddScoped<CarService>();
 builder.Services.AddScoped<EngineService>();
 builder.Services.AddScoped<ColorService>();
 builder.Services.AddScoped<CountryService>();
+builder.Services.AddScoped<ManafacturerService>();
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 Encoding.RegisterProvider(new CustomEncodingProvider());
