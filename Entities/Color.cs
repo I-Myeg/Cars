@@ -1,11 +1,10 @@
-﻿using Cars.Handbooks;
-using Cars.Handbooks.Enums;
+﻿using Cars.Handbooks.Enums;
 
 namespace Cars.Entities;
 
-public class Color : Handbook<ColorOption>
+public class Color 
 {
-    public Color(ColorOption id, string description) : base(id, description)
-    {
-    }
+    public ColorOption Id { get; set; }
+    public string Code { get; set; }
+    public string Description { get; set; }
 }

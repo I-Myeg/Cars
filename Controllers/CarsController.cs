@@ -8,10 +8,10 @@ namespace Cars.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CarsControllers : ControllerBase
+public class CarsController : ControllerBase
 { 
     private readonly CarService _carService;
-    public CarsControllers(CarService carService)
+    public CarsController(CarService carService)
     {
         _carService = carService;
     }
@@ -59,7 +59,5 @@ public class CarsControllers : ControllerBase
         await _carService.Delete(id);
 
         return NoContent();
-
-
     }
 }

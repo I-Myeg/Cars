@@ -1,3 +1,5 @@
+using System.Text;
+using Cars;
 using Cars.DataBase;
 using Cars.Mapping;
 using Cars.Services;
@@ -11,11 +13,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(CarMappingProfile));
+builder.Services.AddAutoMapper(typeof(CarMappingProfile), typeof(EngineMappingProfile));
+
 
 builder.Services.AddNpgsql<DatabaseContext>(
     connectionString: "Host=localhost;Port=5433;Username=postgres;Password=root;Database=cars-db");
 builder.Services.AddScoped<CarService>();
+builder.Services.AddScoped<EngineService>();
+builder.Services.AddScoped<ColorService>();
+builder.Services.AddScoped<CountryService>();
+
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+Encoding.RegisterProvider(new CustomEncodingProvider());
 
 var app = builder.Build();
 

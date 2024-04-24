@@ -1,11 +1,8 @@
-﻿using Cars.Handbooks;
-using Cars.Handbooks.Enums;
+﻿namespace Cars.Entities;
 
-namespace Cars.Entities;
-
-public class Country : Handbook<CountryOption>
+public class Country
 {
-    public Country(CountryOption id, string description) : base(id, description)
-    {
-    }
+    public int Id { get; set; }
+    public string Code { get; set; }
+    public string Description { get; set; }
 }
