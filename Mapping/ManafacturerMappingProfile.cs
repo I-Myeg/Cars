@@ -9,7 +9,7 @@ public class ManafacturerMappingProfile : Profile
     public ManafacturerMappingProfile()
     {
         CreateMap<Manafacturer, ManafacturerModel>()
-            .ForMember(mm => mm.Cars, opt => opt.MapFrom(p => p.Cars));
+            .ForMember(dest => dest.Cars, opt => opt.MapFrom(src => src.Cars.Select(car => car.Model)));
     }
     
 }

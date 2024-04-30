@@ -9,7 +9,6 @@ public class EngineMappingProfile : Profile
     public EngineMappingProfile()
     {
         CreateMap<Engine, EngineModel>()
-            .ForMember(c => c.Cars, opt => opt.Ignore())
-            .PreserveReferences();
+            .ForMember(dest => dest.Cars, opt => opt.Ignore());
     }
 }

@@ -9,8 +9,11 @@ public class CarMappingProfile : Profile
     public CarMappingProfile()
     {
         CreateMap<Car, CarModel>()
-            .ForMember(cm => cm.Fabricator, opt => opt.MapFrom(p => p.Manafacturer.Fabricator));
-        
-        CreateMap<Manafacturer, ManafacturerModel>();
+            .ForMember(dest => dest.Engine, opt => opt.MapFrom(src => src.Engine))
+            .ForMember(dest => dest.Fabricator, opt => opt.MapFrom(src => src.Manafacturer.Fabricator))
+            .ForMember(dest => dest.Model, opt => opt.MapFrom(src => src.Model));
+            
+        CreateMap<EngineModel, EngineModel>() 
+            .ForMember(dest => dest.Cars, opt => opt.Ignore()); // Игнорируем список Cars при маппинге
     }
 }
