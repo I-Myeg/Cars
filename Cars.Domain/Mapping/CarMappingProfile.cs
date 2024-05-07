@@ -12,8 +12,8 @@ public class CarMappingProfile : Profile
             .ForMember(dest => dest.Engine, opt => opt.MapFrom(src => src.Engine))
             .ForMember(dest => dest.Fabricator, opt => opt.MapFrom(src => src.Manufacturer.Fabricator))
             .ForMember(dest => dest.Model, opt => opt.MapFrom(src => src.Model));
-            
-        CreateMap<EngineModel, EngineModel>() 
-            .ForMember(dest => dest.Cars, opt => opt.Ignore()); // Игнорируем список Cars при маппинге
+
+        CreateMap<EngineShortModel, EngineModel>();
+        //.ForMember(dest => dest.Cars, opt => opt.Ignore()); // Игнорируем список Cars при маппинге
     }
 }
