@@ -5,6 +5,7 @@ using Cars.Domain.Mapping;
 using Cars.Domain.Services;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -24,6 +25,7 @@ builder.Services.AddScoped<EngineService>();
 builder.Services.AddScoped<ColorService>();
 builder.Services.AddScoped<CountryService>();
 builder.Services.AddScoped<ManufacturerService>();
+builder.Services.AddScoped<UserService>();
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 Encoding.RegisterProvider(new CustomEncodingProvider());
