@@ -1,4 +1,5 @@
-﻿using Cars.Domain.Models;
+﻿using Cars.Database.Entities;
+using Cars.Domain.Models;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,42 +17,30 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult Register(UserModel userModel)
+    public async Task<IActionResult> Register(UserModel userModel)
     {
-        try
+        var user = new User
         {
-            _userService.RegisterUser(userModel);
-            return Ok("User registered successfully.");
-        }
-        catch (System.Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+            Email = userModel.Email,
+            Password = userModel.Password,
+            Role = userModel.Role
+        };
+
+        var result = await _userService.CreateUser(user);
+        if (!result)
+            return BadRequest("User already exist");
+
+        return Ok("User created successfully");
     }
 
-    [HttpPost("authenticate")]
-    public IActionResult Authenticate([FromBody] UserModel userModel)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(UserModel userModel)
     {
-        var user = _userService.Authenticate(userModel.Email, userModel.Password);
+        var isValid = await _userService.ValidateUser(userModel.Email, userModel.Password);
+        if (!isValid)
+            return Unauthorized("Invalid login");
 
-        if (user == null)
-        {
-            return Unauthorized("Invalid email or password.");
-        }
+        return Ok("Login successful");
 
-        return Ok(user);
-    }
-
-    [HttpGet("{email}")]
-    public IActionResult GetUserByEmail(string email)
-    {
-        var user = _userService.GetUserByEmail(email);
-
-        if (user == null)
-        {
-            return NotFound("User not found.");
-        }
-
-        return Ok(user);
     }
 }

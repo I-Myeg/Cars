@@ -1,12 +1,14 @@
 ﻿using Cars.Domain.Models;
 using Cars.Domain.Parameters;
 using Cars.Domain.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cars.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Roles = "Admin")]
 public class CarsController : ControllerBase
 { 
     private readonly CarService _carService;

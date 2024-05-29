@@ -2,13 +2,14 @@
 
 public class User
 {
+    public int Id { get; set; } 
     public string Email { get; set; }
-    public string Password { get; set; }
+    private string _password;
+    public string Password
+    {
+        get => _password;
+        set => _password = BCrypt.Net.BCrypt.HashPassword(value);
+    }
     public Role Role { get; set; }
 }
 
-public class Role
-{
-    public string Name { get; set; }
-    public Role(string name) => Name = name;
-}
