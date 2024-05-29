@@ -27,10 +27,19 @@ public class UserController : ControllerBase
         };
 
         var result = await _userService.CreateUser(user);
-        if (!result)
+        if (result == null)
             return BadRequest("User already exist");
 
-        return Ok("User created successfully");
+        if (user.Email != null)
+        {
+            var token = _userService.GenerateJwtToken(user);
+            
+            return Ok(new { Token = token });
+        }
+        else
+        {
+            return BadRequest("User email cannot be null");
+        }
     }
 
     [HttpPost("login")]
