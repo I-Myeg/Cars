@@ -1,11 +1,13 @@
 ﻿using Cars.Database.Entities;
 using Cars.Domain.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cars.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CountryController : ControllerBase
 {
     private readonly CountryService _countryService;
