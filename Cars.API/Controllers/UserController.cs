@@ -43,13 +43,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserModel userModel)
+    public async Task<IActionResult> Login(LoginModel loginModel)
     {
-        var isValid = await _userService.ValidateUser(userModel.Email, userModel.Password);
-        if (!isValid)
+        var token = await _userService.Login(loginModel.Email, loginModel.Password);
+        if (token == null)
             return Unauthorized("Invalid login");
 
-        return Ok("Login successful");
-
+        return Ok(new { token });
     }
 }

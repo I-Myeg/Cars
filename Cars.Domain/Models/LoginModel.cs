@@ -2,6 +2,6 @@
 
 public class LoginModel
 {
-    public static string Email { get; set; }
-    public static string Password { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
 }

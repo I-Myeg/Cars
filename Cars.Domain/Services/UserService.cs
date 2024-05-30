@@ -45,6 +45,16 @@ namespace Cars.Domain.Services
             var token = GenerateJwtToken(user);
             return token;
         }
+        
+        public async Task<string> Login(string email, string password)
+        {
+            var user = await GetUserByEmail(email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+                return null;
+
+            var token = GenerateJwtToken(user);
+            return token;
+        }
 
         public string GenerateJwtToken(User user)
         {
