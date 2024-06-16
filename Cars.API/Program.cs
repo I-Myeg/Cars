@@ -1,4 +1,5 @@
 using Cars.API;
+using Cars.API.Utils;
 using Cars.Database.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<DatabaseContext>();
         context.Database.Migrate();
+        await DatabaseInitializer.InitializeAsync(context);
     }
     catch (Exception exception)
     {

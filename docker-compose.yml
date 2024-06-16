@@ -1,0 +1,23 @@
+﻿services:
+  cars.api:
+    image: cars.api
+    build:
+      context: .
+      dockerfile: Cars.API/Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=localhost;Port=5433;Username=postgres;Password=root;Database=cars-db
+    depends_on:
+      - database
+
+    database:
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=root
+        - POSTGRES_DB=cars-db
+      ports:
+        - "5433:5432"
+      volumes:
+        - postgres-data:/var/lib/postgresql/data
