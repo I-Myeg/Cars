@@ -1,4 +1,5 @@
 ﻿using Cars.Database.Entities;
+using Cars.Domain.Interfaces;
 using Cars.Domain.Models;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,9 @@ namespace Cars.API.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }

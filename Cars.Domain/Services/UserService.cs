@@ -3,13 +3,14 @@ using System.Security.Claims;
 using System.Text;
 using Cars.Database.Database;
 using Cars.Database.Entities;
+using Cars.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Cars.Domain.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly DatabaseContext _context;
         private readonly IConfiguration _configuration;

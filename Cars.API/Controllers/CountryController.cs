@@ -1,4 +1,5 @@
 ﻿using Cars.Database.Entities;
+using Cars.Domain.Interfaces;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,9 @@ namespace Cars.API.Controllers;
 [Authorize]
 public class CountryController : ControllerBase
 {
-    private readonly CountryService _countryService;
+    private readonly ICountryService _countryService;
 
-    public CountryController(CountryService countryService)
+    public CountryController(ICountryService countryService)
     {
         _countryService = countryService;
     }

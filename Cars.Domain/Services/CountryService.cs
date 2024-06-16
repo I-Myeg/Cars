@@ -3,6 +3,7 @@ using System.Text;
 using Cars.Database.Database;
 using Cars.Database.Entities;
 using Cars.Database.Handbooks.Enums;
+using Cars.Domain.Interfaces;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cars.Domain.Services;
 
-public class CountryService
+public class CountryService : ICountryService
 {
     private readonly DatabaseContext _context;
 

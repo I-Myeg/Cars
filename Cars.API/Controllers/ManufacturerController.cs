@@ -1,4 +1,5 @@
-﻿using Cars.Domain.Models;
+﻿using Cars.Domain.Interfaces;
+using Cars.Domain.Models;
 using Cars.Domain.Parameters;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,9 @@ namespace Cars.API.Controllers;
 [Route("[controller]")]
 public class ManufacturerController : ControllerBase
 {
-    private readonly ManufacturerService _manufacturerService;
+    private readonly IManufacturerService _manufacturerService;
 
-    public ManufacturerController(ManufacturerService manufacturerService)
+    public ManufacturerController(IManufacturerService manufacturerService)
     {
         _manufacturerService = manufacturerService;
     }

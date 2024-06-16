@@ -1,4 +1,5 @@
-﻿using Cars.Domain.Models;
+﻿using Cars.Domain.Interfaces;
+using Cars.Domain.Models;
 using Cars.Domain.Parameters;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -11,8 +12,8 @@ namespace Cars.API.Controllers;
 [Authorize(Roles = "Admin")]
 public class CarsController : ControllerBase
 { 
-    private readonly CarService _carService;
-    public CarsController(CarService carService)
+    private readonly ICarService _carService;
+    public CarsController(ICarService carService)
     {
         _carService = carService;
     }

@@ -1,4 +1,5 @@
-﻿using Cars.Domain.Models;
+﻿using Cars.Domain.Interfaces;
+using Cars.Domain.Models;
 using Cars.Domain.Parameters;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +13,9 @@ namespace Cars.API.Controllers;
 [Authorize]
 public class EngineController : ControllerBase
 {
-    private readonly EngineService _engineService;
+    private readonly IEngineService _engineService;
 
-    public EngineController(EngineService engineService)
+    public EngineController(IEngineService engineService)
     {
         _engineService = engineService;
     }

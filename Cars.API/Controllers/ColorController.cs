@@ -1,4 +1,5 @@
 ﻿using Cars.Database.Entities;
+using Cars.Domain.Interfaces;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,9 @@ namespace Cars.API.Controllers;
 [ApiController]
 public class ColorController : ControllerBase
 {
-    private readonly ColorService _colorService;
+    private readonly IColorService _colorService;
 
-    public ColorController(ColorService colorService)
+    public ColorController(IColorService colorService)
     {
         _colorService = colorService;
     }

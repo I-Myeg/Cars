@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Cars.Database.Database;
 using Cars.Database.Entities;
+using Cars.Domain.Interfaces;
 using Cars.Domain.Models;
 using Cars.Domain.Parameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cars.Domain.Services;
 
-public class ManufacturerService
+public class ManufacturerService : IManufacturerService
 {
     private readonly DatabaseContext _context;
     private readonly IMapper _mapper;

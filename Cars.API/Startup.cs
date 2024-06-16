@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Cars.API.Utils;
 using Cars.Database.Database;
+using Cars.Domain.Interfaces;
 using Cars.Domain.Mapping;
 using Cars.Domain.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -57,12 +58,12 @@ public class Startup
         services.AddDbContext<DatabaseContext>(options =>
             options.UseNpgsql(connectionString));
 
-        services.AddScoped<CarService>();
-        services.AddScoped<EngineService>();
-        services.AddScoped<ColorService>();
-        services.AddScoped<CountryService>();
-        services.AddScoped<ManufacturerService>();
-        services.AddScoped<UserService>();
+        services.AddScoped<ICarService, CarService>();
+        services.AddScoped<IEngineService, EngineService>();
+        services.AddScoped<IColorService, ColorService>();
+        services.AddScoped<ICountryService, CountryService>();
+        services.AddScoped<IManufacturerService, ManufacturerService>();
+        services.AddScoped<IUserService, UserService>();
 
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         Encoding.RegisterProvider(new CustomEncodingProvider());

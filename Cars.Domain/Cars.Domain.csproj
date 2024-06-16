@@ -23,8 +23,4 @@
       <ProjectReference Include="..\Cars.Database\Cars.Database.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Interfaces\" />
-    </ItemGroup>
-
 </Project>
