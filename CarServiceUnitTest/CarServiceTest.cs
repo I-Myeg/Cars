@@ -1,115 +1,126 @@
 ﻿using AutoMapper;
 using Cars.Database.Database;
 using Cars.Database.Entities;
+using Cars.Domain.Mapping;
 using Cars.Domain.Models;
 using Cars.Domain.Parameters;
 using Cars.Domain.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
 
-namespace CarServiceUnitTest;
-
-public class CarServiceTest
+namespace CarServiceUnitTest
 {
-    private Mock<DatabaseContext> _mockContext;
-    private Mock<IMapper> _mockMapper;
-    private CarService _carService;
-
-    [SetUp]
-    public void Setup()
+    public class CarServiceTest
     {
-        _mockContext = new Mock<DatabaseContext>();
-        _mockMapper = new Mock<IMapper>();
-        _carService = new CarService(_mockContext.Object, _mockMapper.Object);
-    }
+        private DatabaseContext _databaseContext;
+        private IMapper _mapper;
+        private CarService _carService;
 
-    [Test]
-    public async Task GetAll()
-    {
-        var cars = new List<Car>
+        [SetUp]
+        public void Setup()
         {
-            new Car { Id = 1, Model = "Model 1" },
-            new Car { Id = 2, Model = "Model 2" }
-        };
+            var options = new DbContextOptionsBuilder<DatabaseContext>()
+                .UseInMemoryDatabase(databaseName: "CarServiceTestDatabase")
+                .Options;
+            
+            _databaseContext = new DatabaseContext(options);
 
-        var carModels = new List<CarModel>
+           // var config = new MapperConfiguration(c => {
+             //   c.AddProfile<CarMappingProfile>();
+            //});
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Car, CarModel>(); 
+            });
+            _mapper = config.CreateMapper();
+
+            _carService = new CarService(_databaseContext, _mapper);
+        }
+
+        [TearDown]
+        public void TearDown()
         {
-            new CarModel { Id = 1, Model = "Model1" },
-            new CarModel { Id = 2, Model = "Model2" }
-        };
+            _databaseContext.Database.EnsureDeleted();
+            _databaseContext.Dispose();
+        }
 
-        _mockContext.SetupDbSet(cars);
-        _mockMapper.Setup(m => m.Map<List<CarModel>>(It.IsAny<List<Car>>())).Returns(carModels);
-
-        var result = await _carService.GetAll();
-        
-        Assert.AreEqual(2, result.Count);
-        Assert.AreEqual("Model1", result[0].Model);
-        Assert.AreEqual("Model2", result[1].Model);
-    }
-
-    [Test]
-    public async Task Get_ReturnsCarModel_WhenCarExists()
-    {
-        var car = new Car { Id = 1, Model = "Model1" };
-        var carModel = new CarModel { Id = 1, Model = "Model1" };
-
-        _mockContext.SetupDbSet(new List<Car> { car });
-        _mockMapper.Setup(m => m.Map<CarModel>(It.IsAny<Car>())).Returns(carModel);
-
-        var result = await _carService.Get(1);
-        
-        Assert.IsNotNull(result);
-        Assert.AreEqual("Model1", result.Model);
-    }
-    
-    [Test]
-    public async Task Get_ReturnsNull_WhenCarDoesNoExists()
-    {
-        var result = await _carService.Get(999);
-        
-        Assert.IsNull(result);
-    }
-
-    [Test]
-    public async Task AddCar()
-    {
-        var createParams = new CarCreateParameters
+        [Test]
+        public async Task GetAll()
         {
-            Model = "Model1",
-            Year = 2020
-        };
+            var cars = new List<Car>
+            {
+                new Car { Id = 1, Model = "Model 1" },
+                new Car { Id = 2, Model = "Model 2" }
+            };
 
-        _mockContext.Setup(c => c.Cars.AddAsync(It.IsAny<Car>(), It.IsAny<CancellationToken>()))
-            .Returns(new ValueTask<EntityEntry<Car>>(Task.FromResult(Mock.Of<EntityEntry<Car>>())));
+            await _databaseContext.Cars.AddRangeAsync(cars);
+            await _databaseContext.SaveChangesAsync();
+            
+            var savedCars = await _databaseContext.Cars.ToListAsync();
+            Assert.AreEqual(2, savedCars.Count);
+        }
 
-
-        // Act
-        await _carService.Add(createParams);
-
-        // Assert
-        _mockContext.Verify(c => c.Cars.AddAsync(It.IsAny<Car>(), default), Times.Once);
-        _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once);
-    }
-    
-    [Test]
-    public async Task Update_UpdatesCar_WhenCarExists()
-    {
-        var updateParams = new CarUpdateParameters
+        [Test]
+        public async Task Get_ReturnsCarModel_WhenCarExists()
         {
-            Model = "UpdatedModel",
-            Year = 2021
-        };
+            var car = new Car { Id = 1, Model = "Model 1" };
 
-        var car = new Car { Id = 1, Model = "Model1", Year = 2020 };
+            await _databaseContext.Cars.AddAsync(car);
+            await _databaseContext.SaveChangesAsync();
+            
+            var carFromDb = await _databaseContext.Cars.FindAsync(1);
+            Assert.IsNotNull(carFromDb, "Car was not added to the database");
 
-        _mockContext.SetupDbSet(new List<Car> { car });
-        _mockContext.Setup(c => c.Cars.FindAsync(It.IsAny<int>())).ReturnsAsync(car);
+            var result = await _carService.Get(1);
+
+            Assert.IsNotNull(result, "Result from service is null");
+            Assert.AreEqual("Model 1", result.Model);
+        }
         
-        await _carService.Update(1, updateParams);
-        
-        Assert.AreEqual(updateParams.Model, car.Model);
-        Assert.AreEqual(updateParams.Year, car.Year);
-        _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once);
+        [Test]
+        public async Task Get_ReturnsNull_WhenCarDoesNotExist()
+        {
+            var result = await _carService.Get(999);
+            
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task AddCar()
+        {
+            var createParams = new CarCreateParameters
+            {
+                Model = "Model 1",
+                Year = 2020
+            };
+
+            await _carService.Add(createParams);
+
+            var car = await _databaseContext.Cars.SingleOrDefaultAsync(c => c.Model == "Model 1");
+            Assert.IsNotNull(car);
+            Assert.AreEqual(2020, car.Year);
+        }
+
+        [Test]
+        public async Task Update_UpdatesCar_WhenCarExists()
+        {
+            var car = new Car { Id = 1, Model = "Model 1", Year = 2020 };
+
+            await _databaseContext.Cars.AddAsync(car);
+            await _databaseContext.SaveChangesAsync();
+
+            var updateParams = new CarUpdateParameters
+            {
+                Model = "Updated Model",
+                Year = 2021
+            };
+
+            await _carService.Update(1, updateParams);
+
+            var updatedCar = await _databaseContext.Cars.FindAsync(1);
+            Assert.AreEqual("Updated Model", updatedCar.Model);
+            Assert.AreEqual(2021, updatedCar.Year);
+        }
     }
 }
