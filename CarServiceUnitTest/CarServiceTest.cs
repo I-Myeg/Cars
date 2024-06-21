@@ -18,21 +18,37 @@ namespace CarServiceUnitTest
         private CarService _carService;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             var options = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseInMemoryDatabase(databaseName: "CarServiceTestDatabase")
                 .Options;
             
             _databaseContext = new DatabaseContext(options);
-
-           // var config = new MapperConfiguration(c => {
-             //   c.AddProfile<CarMappingProfile>();
-            //});
-            var config = new MapperConfiguration(cfg =>
+            
+            var manufacturer = new Manufacturer
             {
-                cfg.CreateMap<Car, CarModel>(); 
+                ManufacturerId = 1
+            };
+
+            var engine = new Engine
+            {
+                EngineId = 1
+            };
+
+            await _databaseContext.Manufacturers.AddRangeAsync(manufacturer);
+            await _databaseContext.Engines.AddRangeAsync(engine);
+            await _databaseContext.SaveChangesAsync();
+
+            var config = new MapperConfiguration(c => {
+                c.AddProfile<CarMappingProfile>();
+                c.AddProfile<EngineMappingProfile>();
+                c.AddProfile<ManufacturerMappingProfile>();
             });
+            //var config = new MapperConfiguration(cfg =>
+            //{
+              //  cfg.CreateMap<Car, CarModel>(); 
+            //});
             _mapper = config.CreateMapper();
 
             _carService = new CarService(_databaseContext, _mapper);
@@ -50,8 +66,8 @@ namespace CarServiceUnitTest
         {
             var cars = new List<Car>
             {
-                new Car { Id = 1, Model = "Model 1" },
-                new Car { Id = 2, Model = "Model 2" }
+                new Car { Id = 1, Model = "Model 1", ManufacturerId = 1, EngineId = 1},
+                new Car { Id = 2, Model = "Model 2" , ManufacturerId = 1, EngineId = 1}
             };
 
             await _databaseContext.Cars.AddRangeAsync(cars);
@@ -59,12 +75,15 @@ namespace CarServiceUnitTest
             
             var savedCars = await _databaseContext.Cars.ToListAsync();
             Assert.AreEqual(2, savedCars.Count);
+
+            var result = await _carService.GetAll();
+            Assert.AreEqual(2,result.Count);
         }
 
         [Test]
         public async Task Get_ReturnsCarModel_WhenCarExists()
         {
-            var car = new Car { Id = 1, Model = "Model 1" };
+            var car = new Car { Id = 1, Model = "Model 1", ManufacturerId = 1, EngineId = 1};
 
             await _databaseContext.Cars.AddAsync(car);
             await _databaseContext.SaveChangesAsync();
